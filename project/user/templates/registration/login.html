@@ -1,0 +1,171 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin | Login </title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{% static 'internal/plugins/fontawesome-free/css/all.min.css' %}">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{% static 'internal/lib-dist/css/adminlte.min.css' %}">
+    <!-- customized message alert css -->
+    <link rel="stylesheet" href="{% static 'custom/css/message-alert.css' %}">
+    <!-- registration css -->
+    <link rel="stylesheet" href="{% static 'custom/css/registration.css' %}">
+
+</head>
+<body class="container-fluid" style="height: 100vh;">
+<div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <!-- Right navbar links -->
+        <ul class="navbar-nav ml-auto">
+            <!-- Navbar Search -->
+            <li class="nav-item">
+                <a href="{% url 'home' %}" class="nav-link text-primary">Visit site</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /.navbar -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content content-center">
+            <div class="container-fluid">
+                <div class="row">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- jquery validation -->
+                        <div class="card-primary">
+                            <div class="card-header pt-3 pb-3 mb-2">
+                                <legend class="card-title text-center">Admin LogIn</legend>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form id="loginForm" method="post" action="{% url 'login' %}">
+                                {% csrf_token %}
+                                <div class="card-body">
+                                    {% if form.non_field_errors %}
+                                        <div class="form-group">
+                                            <ul class="pt-2 pl-0">
+                                                {% for error in form.non_field_errors %}
+                                                    <li class="no-style-list pl-0"><span
+                                                            class="text-danger">{{ error }}</span></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+
+                                    <div class="form-group">
+                                        <label for="username">Email address</label>
+                                        <input type="email" name="username"
+                                               class="form-control {% if form.non_field_errors or form.email.errors %}is-invalid{% endif %}"
+                                               id="username"
+                                               placeholder="Enter email">
+                                        {% if form.email.errors %}
+                                            {% for error in email.errors %}
+                                                <span class="invalid-feedback">{{ error }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password">Password</label>
+                                        <input type="password" name="password"
+                                               class="form-control {% if form.non_field_errors or form.email.errors %}is-invalid{% endif %}"
+                                               id="password" placeholder="Password">
+                                        {% if form.password.errors %}
+                                            {% for error in email.errors %}
+                                                <span class="invalid-feedback">{{ error }}</span>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <!-- /.card-body -->
+                                <div class="card-footer text-center">
+                                    <button type="submit" class="btn btn-primary login-btn" id="loginBtn">Submit
+                                    </button>
+                                </div>
+                                <input type="hidden" name="next" value="{{ next }}"/>
+                            </form>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <!--/.col (left) -->
+                    <!-- right column -->
+                    <div class="col-md-6">
+
+                    </div>
+                    <!--/.col (right) -->
+                </div>
+                <!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    {% include 'shared/footer.html' %}
+
+    <!-- Alert Message -->
+    {% include 'shared/messages.html' %}
+
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery -->
+<script src="{% static 'internal/plugins/jquery/jquery.min.js' %}"></script>
+<!-- Bootstrap 4 -->
+<script src="{% static 'internal/plugins/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<!-- jquery-validation -->
+<script src="{% static 'internal/plugins/jquery-validation/jquery.validate.min.js' %}"></script>
+<script src="{% static 'internal/plugins/jquery-validation/additional-methods.min.js' %}"></script>
+<!-- AdminLTE App -->
+<script src="{% static 'internal/lib-dist/js/adminlte.min.js' %}"></script>
+<!-- Custom JS for alert message dismissal -->
+<script src="{% static 'custom/js/message-dismissal.js' %}"></script>
+
+<!-- Page specific script -->
+<script>
+    $(function () {
+        $('#loginForm').validate({
+            rules: {
+                username: {
+                    required: true,
+                    email: true,
+                },
+                password: {
+                    required: true,
+                }
+            },
+            messages: {
+                username: {
+                    required: "Please enter a email address",
+                    email: "Please enter a valid email address"
+                },
+                password: {
+                    required: "Please provide a password",
+                    minlength: "Your password must be at least 5 characters long"
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+</script>
+</body>
+</html>
